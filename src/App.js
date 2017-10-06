@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { gql, graphql } from 'react-apollo';
+import { compose, gql, graphql } from 'react-apollo';
 
 class App extends Component {
+  onMutate = () =>
+    this.props.mutate().then(res => {
+      console.log(res);
+    })
+
   render() {
     const { data: { loading, people, refetch } } = this.props;
     return (
       <main>
         <header>
+          <button onClick={this.onMutate}>Some mutation</button>
           <button onClick={() => refetch()}>Reload</button>
         </header>
         {loading ? (
@@ -25,11 +31,18 @@ class App extends Component {
   }
 }
 
-export default graphql(
-  gql`{
-    people {
-      id
-      name
-    }
-  }`,
-)(App)
+export default compose(
+  graphql(
+   gql`{
+     people {
+       id
+       name
+     }
+   }`
+ ),
+  graphql(
+   gql`mutation testMutation {
+     testMutation
+   }`
+ )
+)(App);

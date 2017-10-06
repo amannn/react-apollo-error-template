@@ -1,4 +1,5 @@
 import {
+  GraphQLBoolean,
   GraphQLSchema,
   GraphQLObjectType,
   GraphQLID,
@@ -30,4 +31,17 @@ const QueryType = new GraphQLObjectType({
   },
 });
 
-export const schema = new GraphQLSchema({ query: QueryType });
+const MutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    testMutation: {
+      type: GraphQLBoolean,
+      resolve: () => new Promise(resolve => setTimeout(resolve, 1000))
+    },
+  },
+});
+
+export const schema = new GraphQLSchema({
+  query: QueryType,
+  mutation: MutationType
+});
